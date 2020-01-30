@@ -1,0 +1,210 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="TimesheetModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Activities">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="ntext" />
+        </EntityType>
+        <EntityType Name="UserActivities">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="ActivityId" Type="int" Nullable="false" />
+          <Property Name="Duration" Type="int" Nullable="false" />
+          <Property Name="Comment" Type="ntext" />
+          <Property Name="Date" Type="datetime2" Precision="7" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Username" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="nchar" MaxLength="120" Nullable="false" />
+          <Property Name="FullName" Type="nvarchar" MaxLength="120" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_UserActivities_Activities">
+          <End Role="Activities" Type="Self.Activities" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="UserActivities" Type="Self.UserActivities" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Activities">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserActivities">
+              <PropertyRef Name="ActivityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserActivities_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="UserActivities" Type="Self.UserActivities" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserActivities">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="TimesheetModelStoreContainer">
+          <EntitySet Name="Activities" EntityType="Self.Activities" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserActivities" EntityType="Self.UserActivities" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_UserActivities_Activities" Association="Self.FK_UserActivities_Activities">
+            <End Role="Activities" EntitySet="Activities" />
+            <End Role="UserActivities" EntitySet="UserActivities" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserActivities_Users" Association="Self.FK_UserActivities_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserActivities" EntitySet="UserActivities" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TimesheetModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Activities">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="UserActivities" Relationship="TimesheetModel.FK_UserActivities_Activities" FromRole="Activities" ToRole="UserActivities" />
+        </EntityType>
+        <EntityType Name="UserActivities">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="ActivityId" Type="Int32" Nullable="false" />
+          <Property Name="Duration" Type="Int32" Nullable="false" />
+          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="7" />
+          <NavigationProperty Name="Activities" Relationship="TimesheetModel.FK_UserActivities_Activities" FromRole="UserActivities" ToRole="Activities" />
+          <NavigationProperty Name="Users" Relationship="TimesheetModel.FK_UserActivities_Users" FromRole="UserActivities" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="120" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="FullName" Type="String" MaxLength="120" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="UserActivities" Relationship="TimesheetModel.FK_UserActivities_Users" FromRole="Users" ToRole="UserActivities" />
+        </EntityType>
+        <EntityContainer Name="TimesheetEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Activities" EntityType="Self.Activities" />
+          <EntitySet Name="UserActivities" EntityType="Self.UserActivities" />
+          <EntitySet Name="Users" EntityType="Self.Users" />
+          <AssociationSet Name="FK_UserActivities_Activities" Association="TimesheetModel.FK_UserActivities_Activities">
+            <End Role="Activities" EntitySet="Activities" />
+            <End Role="UserActivities" EntitySet="UserActivities" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserActivities_Users" Association="TimesheetModel.FK_UserActivities_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserActivities" EntitySet="UserActivities" />
+          </AssociationSet>
+        </EntityContainer>
+        <Association Name="FK_UserActivities_Activities">
+          <End Type="TimesheetModel.Activities" Role="Activities" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="TimesheetModel.UserActivities" Role="UserActivities" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Activities">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserActivities">
+              <PropertyRef Name="ActivityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserActivities_Users">
+          <End Type="TimesheetModel.Users" Role="Users" Multiplicity="1" />
+          <End Type="TimesheetModel.UserActivities" Role="UserActivities" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserActivities">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TimesheetModelStoreContainer" CdmEntityContainer="TimesheetEntities">
+          <EntitySetMapping Name="Activities">
+            <EntityTypeMapping TypeName="TimesheetModel.Activities">
+              <MappingFragment StoreEntitySet="Activities">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserActivities">
+            <EntityTypeMapping TypeName="TimesheetModel.UserActivities">
+              <MappingFragment StoreEntitySet="UserActivities">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ActivityId" ColumnName="ActivityId" />
+                <ScalarProperty Name="Duration" ColumnName="Duration" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="TimesheetModel.Users">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

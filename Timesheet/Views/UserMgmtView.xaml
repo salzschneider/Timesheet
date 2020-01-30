@@ -1,0 +1,113 @@
+﻿<UserControl x:Class="Timesheet.UI.Views.UserMgmtView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:local="clr-namespace:Timesheet.UI.Views"
+             xmlns:viewmodels="clr-namespace:Timesheet.UI.ViewModels"
+             xmlns:validation="clr-namespace:Timesheet.UI.ValidationRules"       
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <viewmodels:UserMgmtViewModel/>
+    </UserControl.DataContext>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="*"/>
+
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Column="0" Grid.Row="0" VerticalAlignment="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Content="User Management" Style="{StaticResource Header2}"></Label>
+            <Button Grid.Column="1"  Content="Refresh" Command="{Binding LoadUserListCommand}" Margin="10, 5, 0, 5" Style="{StaticResource GeneralButton}"/>
+        </Grid>
+
+        <DataGrid Grid.Column="0" Grid.Row="1" Name="activityList" ItemsSource="{Binding UserList}" AlternatingRowBackground="LightGray" CanUserReorderColumns="True" CanUserResizeColumns="True" CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False" HeadersVisibility="Column" IsReadOnly="True" 
+          CanUserResizeRows="False" CanUserSortColumns="True" BorderThickness="1" VerticalGridLinesBrush="{StaticResource LightGrey}" HorizontalGridLinesBrush="{StaticResource LightGrey}" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Id" Binding="{Binding Id}" />
+                <DataGridTextColumn Header="Username" Binding="{Binding Username}" />
+                <DataGridTextColumn Header="Full Name" Binding="{Binding FullName}" Width="*" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Right Panel -->
+        <StackPanel Grid.Column="1" Grid.RowSpan="2" Style="{StaticResource NewAdminItem}">
+            <Label Content="New User" Style="{StaticResource Header2}"/>
+
+            <Label Content="Username"/>
+            <TextBox x:Name="NewUserUsername" Validation.ErrorTemplate="{StaticResource TextBoxvalidationTemplate}" Style="{StaticResource TextBoxInError}">
+                <Binding Path="UserModelEntity.Username" UpdateSourceTrigger="PropertyChanged" >
+                    <Binding.ValidationRules>
+                        <validation:GeneralInputRule MinLength="1" MaxLength="20" ValidatesOnTargetUpdated="True"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox>
+
+            <Label Content="Password"/>
+
+            <TextBox x:Name="NewUserPassword" Validation.ErrorTemplate="{StaticResource TextBoxvalidationTemplate}" Style="{StaticResource TextBoxInError}">
+                <Binding Path="UserModelEntity.Password" UpdateSourceTrigger="PropertyChanged" >
+                    <Binding.ValidationRules>
+                        <validation:GeneralInputRule MinLength="1" MaxLength="100" ValidatesOnTargetUpdated="True"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox>
+
+            <Label Content="Full Name"/>
+
+            <TextBox x:Name="NewUserFullName" Validation.ErrorTemplate="{StaticResource TextBoxvalidationTemplate}" Style="{StaticResource TextBoxInError}">
+                <Binding Path="UserModelEntity.FullName" UpdateSourceTrigger="PropertyChanged" >
+                    <Binding.ValidationRules>
+                        <validation:GeneralInputRule MinLength="1" MaxLength="50" ValidatesOnTargetUpdated="True"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox>
+
+            <Button Content="Add" Command="{Binding AddUserItemCommand}" IsDefault="True" >
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+                        <Setter Property="IsEnabled" Value="false" />
+                        <Setter Property="Height" Value="28"/>
+                        <Setter Property="Width" Value="75"/>
+                        <Setter Property="Margin" Value="3.5,7,3.5,7"/>
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding ElementName=NewUserUsername, Path=(Validation.HasError)}" Value="false" />
+                                    <Condition Binding="{Binding ElementName=NewUserPassword, Path=(Validation.HasError)}" Value="false" />
+                                    <Condition Binding="{Binding ElementName=NewUserFullName, Path=(Validation.HasError)}" Value="false" />
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="IsEnabled" Value="true" />
+                            </MultiDataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+            <!-- User change -->
+            <Label Content="Change Current User" Style="{StaticResource Header2}"/>
+            <Label Content="Username"/>
+
+            <ComboBox ItemsSource="{Binding UserList}" SelectedItem="{Binding SelectedUser}" DisplayMemberPath="Username" >
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding UserChangeCommand}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ComboBox>
+        </StackPanel>
+        <Label Style="{StaticResource CurrentUser}" Grid.Row="2" Content="{Binding CurrentUser.Username}" ContentStringFormat="Current user: {0}"/>
+    </Grid>
+</UserControl>

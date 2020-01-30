@@ -1,0 +1,32 @@
+﻿<Application x:Class="Timesheet.UI.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Timesheet.UI"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Style definitions-->
+                <ResourceDictionary Source="Resources\Styles\Buttons.xaml"/>
+                <ResourceDictionary Source="Resources\Styles\TextBox.xaml"/>
+                <ResourceDictionary Source="Resources\Styles\Menu.xaml"/>
+                <ResourceDictionary Source="Resources\Styles\Grid.xaml"/>
+                <ResourceDictionary Source="Resources\Styles\StackPanel.xaml"/>
+                <ResourceDictionary Source="Resources\Styles\ContentControl.xaml"/>
+                <ResourceDictionary Source="Resources\Styles\Label.xaml"/>
+                <ResourceDictionary Source="Resources\Styles\Line.xaml"/>
+                <ResourceDictionary Source="Resources\Styles\ComboBox.xaml"/>
+                <ResourceDictionary Source="Resources\Styles\DatePicker.xaml"/>
+                
+                <!-- Validation template definitions-->
+                <ResourceDictionary Source="Resources\ControlTemplates\ValidationTemplates.xaml"/>
+
+                <!-- ViewModel template definitions-->
+                <ResourceDictionary Source="Resources\DataTemplates\ViewModelDataTemplates.xaml"/>
+
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    
+    </Application.Resources>
+</Application>

@@ -1,0 +1,95 @@
+﻿<UserControl x:Class="Timesheet.UI.Views.ReportView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Timesheet.UI.Views"
+             xmlns:viewmodels="clr-namespace:Timesheet.UI.ViewModels"
+             xmlns:validation="clr-namespace:Timesheet.UI.ValidationRules"    
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <viewmodels:ReportViewModel/>
+    </UserControl.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" VerticalAlignment="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Content="Reports" Style="{StaticResource Header2}"></Label>
+        </Grid>
+
+        <TabControl Grid.Row="1">
+            <!-- Activities TAB-->
+            <TabItem Header="Activities">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="5, 5, 0, 10">
+                        <DatePicker SelectedDate="{Binding FilterStartDate}"></DatePicker>
+                        <Label Content="-" VerticalAlignment="Center" Padding="10, 0, 10, 0"/>
+                        <DatePicker SelectedDate="{Binding FilterEndDate}"></DatePicker>
+                        <StackPanel Orientation="Horizontal" Margin="15, 0, 0, 0">
+                            <Button Content="Search" Command="{Binding LoadSumDurationByActivitiesCommand}" IsDefault="True" Style="{StaticResource GeneralButton}" />
+                            <Button Content="Export" Command="{Binding SumActivityExportToCSVCommand}" Style="{StaticResource GeneralButton}"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <DataGrid Grid.Row="2" Margin="5,0,5,5"  Name="activityList" ItemsSource="{Binding UserSumDurationByActivityList}" AlternatingRowBackground="LightGray" CanUserReorderColumns="True" CanUserResizeColumns="True" CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False" HeadersVisibility="Column" IsReadOnly="True" 
+          CanUserResizeRows="False" CanUserSortColumns="True" BorderThickness="1" VerticalGridLinesBrush="{StaticResource LightGrey}" HorizontalGridLinesBrush="{StaticResource LightGrey}" >
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Activity" Binding="{Binding ActivityName}" />
+                            <DataGridTextColumn Header="Sum. Duration" Binding="{Binding SumDurationReadable}" Width="*"  />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            
+            <!-- Users TAB-->
+            <TabItem Header="Users">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="5, 5, 0, 10">
+                        <ComboBox ItemsSource="{Binding UserList}" SelectedItem="{Binding SelectedUser}" DisplayMemberPath="Username" IsEditable="True" Style="{StaticResource UserSelectorReport}" />
+
+                        <DatePicker SelectedDate="{Binding FilterStartDate}"/>
+                        <Label Content="-" VerticalAlignment="Center" Padding="10, 0, 10, 0"/>
+                        <DatePicker SelectedDate="{Binding FilterEndDate}"/>
+
+                        <StackPanel Orientation="Horizontal" Margin="15, 0, 0, 0">
+                            <Button Content="Search" Command="{Binding LoadUserActivitiesDurationCommand}" IsDefault="True" Style="{StaticResource GeneralButton}" />
+                            <Button Content="Export" Command="{Binding UserActivityDurationExportToCSVCommand}" Style="{StaticResource GeneralButton}"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <DataGrid Grid.Row="2" Margin="5,0,5,5"  Name="sdf" ItemsSource="{Binding UserActivitiesDurationList}" AlternatingRowBackground="LightGray" CanUserReorderColumns="True" CanUserResizeColumns="True" CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False" HeadersVisibility="Column" IsReadOnly="True" 
+          CanUserResizeRows="False" CanUserSortColumns="True" BorderThickness="1" VerticalGridLinesBrush="{StaticResource LightGrey}" HorizontalGridLinesBrush="{StaticResource LightGrey}" >
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Username" Binding="{Binding Username}" />
+                            <DataGridTextColumn Header="Activity" Binding="{Binding ActivityName}"  />
+                            <DataGridTextColumn Header="Sum. Duration" Binding="{Binding SumDurationReadable}" Width="*"  />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <Label Style="{StaticResource CurrentUser}" Grid.Row="2" Content="{Binding CurrentUser.Username}" ContentStringFormat="Current user: {0}"/>
+    </Grid>
+</UserControl>
