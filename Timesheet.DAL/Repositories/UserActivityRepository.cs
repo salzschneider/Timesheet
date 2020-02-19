@@ -23,7 +23,7 @@ namespace Timesheet.DAL.Repositories
         }
 
         /// <summary>
-        /// Get all user activity with additional fields (ActivityName, Username)
+        /// Get all user activities with additional fields (ActivityName, Username)
         /// </summary>
         /// <returns></returns>
         public IEnumerable<UserActivitiesExtendedDTO> GetExtendedAll()
@@ -31,15 +31,14 @@ namespace Timesheet.DAL.Repositories
             var allUserActivityList = TimesheetEntities.UserActivities
                      .Select(userActivity => new UserActivitiesExtendedDTO
                      {
-                         Id = userActivity.Id,
-                         UserId = userActivity.UserId,
-                         Username = TimesheetEntities.Users.FirstOrDefault(u => u.Id == userActivity.UserId).Username,
-                         ActivityId = userActivity.ActivityId,
+                         Id           = userActivity.Id,
+                         UserId       = userActivity.UserId,
+                         Username     = TimesheetEntities.Users.FirstOrDefault(u => u.Id == userActivity.UserId).Username,
+                         ActivityId   = userActivity.ActivityId,
                          ActivityName = TimesheetEntities.Activities.FirstOrDefault(a => a.Id == userActivity.ActivityId).Title,
-                         Duration = userActivity.Duration,
-                         Comment = userActivity.Comment,
-                         Date = userActivity.Date,
-
+                         Duration     = userActivity.Duration,
+                         Comment      = userActivity.Comment,
+                         Date         = userActivity.Date,
                      }).OrderBy(c => c.Id);
 
             return allUserActivityList.AsEnumerable();
@@ -50,7 +49,7 @@ namespace Timesheet.DAL.Repositories
         /// </summary>
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
-        /// <param name="userId">Filtering the result by user id. If this argument is 0 the result won't be filtered.</param>
+        /// <param name="userId">Filtering the result by user id. If this argument is 0, the result won't be filtered.</param>
         /// <returns></returns>
         public IEnumerable<UserActivitiesAggrByActivityDTO> GetSumDurationByActivities(DateTime startDate, DateTime endDate, int userId)
         {
@@ -60,9 +59,9 @@ namespace Timesheet.DAL.Repositories
                      .GroupBy(ua => ua.ActivityId)
                      .Select(g => new UserActivitiesAggrByActivityDTO
                      {
-                         ActivityId = g.Key,
+                         ActivityId   = g.Key,
                          ActivityName = TimesheetEntities.Activities.FirstOrDefault(a => a.Id == g.Key).Title,
-                         SumDuration = g.Sum(ua => ua.Duration),
+                         SumDuration  = g.Sum(ua => ua.Duration),
                      }).OrderBy(c => c.ActivityName);
 
             return activityList.AsEnumerable();

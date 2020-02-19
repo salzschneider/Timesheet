@@ -50,7 +50,7 @@ namespace Timesheet.UI.Utilities
         }
 
         /// <summary>
-        /// Creating a UserModel and from a UsersFullDTO 
+        /// Creating a UserModel from a UsersFullDTO 
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
@@ -66,7 +66,7 @@ namespace Timesheet.UI.Utilities
         }
 
         /// <summary>
-        /// Inserting string value at the beginning and in the end of a string list all elements
+        /// Inserting string value at the beginning and in the end of all elements of a string list
         /// </summary>
         /// <param name="list"></param>
         /// <param name="wrapString"></param>
