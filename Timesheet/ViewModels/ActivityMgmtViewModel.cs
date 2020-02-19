@@ -5,8 +5,9 @@ using System.Data.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
-using Timesheet.DAL.Managers;
-using Timesheet.DAL.Timesheet;
+using Timesheet.Core.DTO;
+using Timesheet.BLL.Factories;
+using Timesheet.BLL.Services;
 using Timesheet.UI.Commands;
 using Timesheet.UI.Models;
 using Timesheet.UI.Utilities;
@@ -22,6 +23,7 @@ namespace Timesheet.UI.ViewModels
 
         private ActivityModel activityModelEntity;
 
+  
         public ObservableCollection<ActivityModel> ActivityList
         {
             get { return this.activityList; }
@@ -42,35 +44,21 @@ namespace Timesheet.UI.ViewModels
         {
             ActivityList = GetAllActivities();
             ActivityModelEntity = new ActivityModel();
-            ReloadActivityListCommand = new RelayCommand(ReloadActivityList);
+            ReloadActivityListCommand = new RelayCommand(() => ActivityList = GetAllActivities());
             AddActivityItemCommand = new RelayCommand(AddActivityItem);
-        }
-
-        private void ReloadActivityList()
-        {
-            ActivityList = GetAllActivities();
         }
 
         private void AddActivityItem()
         {
-            ActivityManager.AddActivityItem(ActivityModelEntity.Title, ActivityModelEntity.Description);
+            ActivityService activityService = (ActivityService)ServiceFactory.CreateActivityService();
+
+            activityService.Add(new ActivitiesFullDTO() {
+                    Title = ActivityModelEntity.Title,
+                    Description = ActivityModelEntity.Description,
+            });
 
             ReloadActivityListCommand.Execute(null);
             ActivityModelEntity = new ActivityModel();
-        }
-
-        public static ObservableCollection<ActivityModel> GetAllActivities()
-        {
-            var activityList = ActivityManager.GetAllActivities()
-                .Select(activity => new ActivityModel
-                {
-                    Id          = activity.Id,
-                    Title       = activity.Title,
-                    Description = activity.Description,
-
-                }).ToList();
-
-            return new ObservableCollection<ActivityModel>(activityList);
         }
     }
 }

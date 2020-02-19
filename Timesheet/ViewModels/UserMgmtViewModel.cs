@@ -5,8 +5,9 @@ using System.Data.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
-using Timesheet.DAL.Managers;
-using Timesheet.DAL.Timesheet;
+using Timesheet.Core.DTO;
+using Timesheet.BLL.Factories;
+using Timesheet.BLL.Services;
 using Timesheet.UI.Commands;
 using Timesheet.UI.Models;
 using Timesheet.UI.Utilities;
@@ -70,7 +71,7 @@ namespace Timesheet.UI.ViewModels
             if(SelectedUser != null)
             {
                 //Deep copy not to lose CurrentUser data
-                CurrentUser = Utility.CloneObject(SelectedUser) as UserModel;
+                CurrentUser = Helper.CloneObject(SelectedUser) as UserModel;
                 ViewModelBase.CurrentUserProvider = CurrentUser;
             }
             else
@@ -92,25 +93,15 @@ namespace Timesheet.UI.ViewModels
 
         private void AddUserItem()
         {
-            UserManager.AddUserItem(UserModelEntity.Username, UserModelEntity.Password, UserModelEntity.FullName);
+            UserService.Add(new UsersFullDTO()
+            {
+                Username = UserModelEntity.Username,
+                Password = UserModelEntity.Password,
+                FullName = UserModelEntity.FullName,
+            });
 
             LoadUserList();
             UserModelEntity = new UserModel();
-        }
-
-        public static ObservableCollection<UserModel> GetAllUsers()
-        {
-            var userList = UserManager.GetAllUsers()
-                .Select(user => new UserModel
-                {
-                    Id       = user.Id,
-                    Username = user.Username,
-                    FullName = user.FullName,
-                    Password = user.Password,
-
-                }).ToList();
-
-            return new ObservableCollection<UserModel>(userList); 
         }
     }
 }

@@ -5,8 +5,7 @@ using System.Data.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
-using Timesheet.DAL.Managers;
-using Timesheet.DAL.Timesheet;
+using Timesheet.Core.DTO;
 using Timesheet.UI.Commands;
 using Timesheet.UI.Models;
 using Timesheet.UI.Utilities;
@@ -62,7 +61,7 @@ namespace Timesheet.UI.ViewModels
         public WorklogViewModel()
         {
             LoadUserActivityList();
-            ActivityList = ActivityMgmtViewModel.GetAllActivities();
+            ActivityList = GetAllActivities();
             SelectedActivity = ActivityList.FirstOrDefault();
             UserActivityEntity = new UserActivityModel();
 
@@ -83,31 +82,33 @@ namespace Timesheet.UI.ViewModels
 
         private ObservableCollection<UserActivityModel> GetAllUserActivities()
         {
-            var userActivityList = UserActivityManager.GetAllUserActivities()
+            var userActivityList = UserActivityService.GetExtendedAll()
                 .Select(userActivity => new UserActivityModel
                 {
-                    Id = userActivity.Id,
-                    UserId = userActivity.UserId,
-                    Username = userActivity.Username,
-                    ActivityId = userActivity.ActivityId,
-                    ActivityName = userActivity.ActivityName,
-                    Duration = userActivity.Duration,
+                    Id               = userActivity.Id,
+                    UserId           = userActivity.UserId,
+                    Username         = userActivity.Username,
+                    ActivityId       = userActivity.ActivityId,
+                    ActivityName     = userActivity.ActivityName,
+                    Duration         = userActivity.Duration,
                     DurationReadable = (userActivity.Duration < TimeSpan.MaxValue.TotalSeconds) ? TimeSpan.FromSeconds(userActivity.Duration).ToString(@"hh\:mm\:ss") : "Too much",
-                    Comment = userActivity.Comment,
-                    Date = userActivity.Date,
+                    Comment          = userActivity.Comment,
+                    Date             = userActivity.Date,
 
-                }).ToList();
+                });
 
             return new ObservableCollection<UserActivityModel>(userActivityList);
         }
 
         private void AddUserActivityItem()
         {
-            UserActivityManager.AddUserActivityItem(ViewModelBase.CurrentUserProvider.Id, 
-                                                    SelectedActivity.Id,
-                                                    UserActivityEntity.DurationHours * 3600 + UserActivityEntity.DurationMinutes * 60,
-                                                    UserActivityEntity.Comment,
-                                                    DateTime.Now);
+            UserActivityService.Add(new UserActivitiesFullDTO() {
+                UserId     = ViewModelBase.CurrentUserProvider.Id,
+                ActivityId = SelectedActivity.Id,
+                Duration   = UserActivityEntity.DurationHours * 3600 + UserActivityEntity.DurationMinutes * 60,
+                Comment    = UserActivityEntity.Comment,
+                Date       = DateTime.Now,
+            });
 
             LoadUserActivityList();
 

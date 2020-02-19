@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Timesheet.DAL.Managers;
-using Timesheet.DAL.Timesheet;
+using Timesheet.Core.DTO;
+using Timesheet.BLL.Factories;
+using Timesheet.BLL.Services;
 using Timesheet.UI.Commands;
 using Timesheet.UI.Models;
 using Timesheet.UI.Utilities;
@@ -12,6 +13,7 @@ using System.Windows.Input;
 using System.Windows;
 using Microsoft.Win32;
 using System.IO;
+using System.Collections.ObjectModel;
 
 namespace Timesheet.UI.ViewModels
 {
@@ -21,6 +23,14 @@ namespace Timesheet.UI.ViewModels
 
         private ViewModelBase currentViewModel;
 
+        private bool isSignedIn = ViewModelBase.CurrentUserProvider != null;
+
+        protected ActivityService ActivityService { get; set; }
+
+        protected UserService UserService { get; set; }
+
+        protected UserActivityService UserActivityService { get; set; }
+
         public ICommand OpenActivityMgmtCommand { get; }
  
         public ICommand OpenUserMgmtCommand { get; }
@@ -29,11 +39,18 @@ namespace Timesheet.UI.ViewModels
 
         public ICommand OpenReportMgmtCommand { get; }
 
+        public ICommand SignInCommand { get; }
 
         public ViewModelBase SelectedViewModel
         {
             get { return currentViewModel; }
             set { OnPropertyChanged<ViewModelBase>(ref currentViewModel, value); }
+        }
+
+        public bool IsSignedIn
+        {
+            get { return isSignedIn; }
+            set { OnPropertyChanged<bool>(ref isSignedIn, value); }
         }
 
         /// <summary>
@@ -48,7 +65,7 @@ namespace Timesheet.UI.ViewModels
         }
 
         /// <summary>
-        /// Title of the main application window 
+        /// Title on the main application window 
         /// </summary>
         public string Title { get; set; }
 
@@ -57,44 +74,32 @@ namespace Timesheet.UI.ViewModels
             SelectedViewModel = this;
             Title = ApplicationConfig.ApplicationName + " " + ApplicationConfig.ApplicationVersion;
 
-            OpenActivityMgmtCommand = new RelayCommand(OpenActivityMgmt);
-            OpenUserMgmtCommand = new RelayCommand(OpenUserMgmt);
-            OpenWorklogMgmtCommand = new RelayCommand(OpenWorklogMgmt);
-            OpenReportMgmtCommand = new RelayCommand(OpenReportMgmt);
+            ActivityService = (ActivityService)ServiceFactory.CreateActivityService();
+            UserService = (UserService)ServiceFactory.CreateUserService();
+            UserActivityService = (UserActivityService)ServiceFactory.CreateUserActivityService();
 
-            if (ViewModelBase.CurrentUserProvider == null)
-            {
-                CurrentUser = new UserModel();
+            OpenActivityMgmtCommand = new RelayCommand(() => SelectedViewModel = new ActivityMgmtViewModel());
+            OpenUserMgmtCommand = new RelayCommand(() => SelectedViewModel = new UserMgmtViewModel());
+            OpenWorklogMgmtCommand = new RelayCommand(() => SelectedViewModel = new WorklogViewModel());
+            OpenReportMgmtCommand = new RelayCommand(() => SelectedViewModel = new ReportViewModel());
+            SignInCommand = new RelayCommand(SignIn);
 
-                //1. user is the admin now
-                UsersToCurrentUser(UserManager.GetUser(1));
-
-                ViewModelBase.CurrentUserProvider = CurrentUser;
-            }
-            else
+            if (IsSignedIn)
             {
                 CurrentUser = ViewModelBase.CurrentUserProvider;
             }
         }
 
-        private void OpenActivityMgmt()
+        private void SignIn()
         {
-            SelectedViewModel = new ActivityMgmtViewModel();
-        }
+            if (!IsSignedIn)
+            {
+                //1. user is the admin now
+                CurrentUser = Helper.CreateUserModel(UserService.GetById(1));
+                ViewModelBase.CurrentUserProvider = CurrentUser;
 
-        private void OpenUserMgmt()
-        {
-            SelectedViewModel = new UserMgmtViewModel();
-        }
-
-        private void OpenWorklogMgmt()
-        {
-            SelectedViewModel = new WorklogViewModel();
-        }
-
-        private void OpenReportMgmt()
-        {
-            SelectedViewModel = new ReportViewModel();
+                IsSignedIn = true;
+            }
         }
 
         protected void SaveFileAs(string csvContent)
@@ -108,12 +113,33 @@ namespace Timesheet.UI.ViewModels
             }
         }
 
-        protected void UsersToCurrentUser(Users users)
+        public ObservableCollection<ActivityModel> GetAllActivities()
         {
-            CurrentUser.Id       = users.Id;
-            CurrentUser.Username = users.Username;
-            CurrentUser.Password = users.Password;
-            CurrentUser.FullName = users.FullName;
+            var activityList = ActivityService.GetAll()
+                .Select(activity => new ActivityModel
+                {
+                    Id          = activity.Id,
+                    Title       = activity.Title,
+                    Description = activity.Description,
+
+                }).ToList();
+
+            return new ObservableCollection<ActivityModel>(activityList);
+        }
+
+        public ObservableCollection<UserModel> GetAllUsers()
+        {
+            var userList = UserService.GetAll()
+                .Select(user => new UserModel
+                {
+                    Id = user.Id,
+                    Username = user.Username,
+                    FullName = user.FullName,
+                    Password = user.Password,
+
+                }).ToList();
+
+            return new ObservableCollection<UserModel>(userList);
         }
     }
 }

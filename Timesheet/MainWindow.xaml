@@ -16,9 +16,9 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
-             </Grid.RowDefinitions>
-            
-            <Menu Grid.Row="0">
+            </Grid.RowDefinitions>
+
+        <Menu Grid.Row="0" Visibility="{Binding IsSignedIn, Converter={StaticResource BoolToVisibilityConverter}}">
                 <Menu.Items>
                     <MenuItem Header="Admin">
                         <MenuItem Header="Activity" Command="{Binding OpenActivityMgmtCommand}"/>
@@ -26,7 +26,7 @@
                     </MenuItem>
                     <MenuItem Header="Worklogs" Command="{Binding OpenWorklogMgmtCommand}"/>
                     <MenuItem Header="Reports" Command="{Binding OpenReportMgmtCommand}"/>
-            </Menu.Items>
+                </Menu.Items>
             </Menu>
 
             <ContentControl Grid.Row="1" Style="{StaticResource ContentSection}" Content="{Binding SelectedViewModel}"/>

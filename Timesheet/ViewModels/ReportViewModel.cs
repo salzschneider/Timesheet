@@ -5,8 +5,7 @@ using System.Data.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
-using Timesheet.DAL.Managers;
-using Timesheet.DAL.Timesheet;
+using Timesheet.Core.DTO;
 using Timesheet.UI.Commands;
 using Timesheet.UI.Models;
 using Timesheet.UI.Utilities;
@@ -78,7 +77,9 @@ namespace Timesheet.UI.ViewModels
         {
             //activities
             UserSumDurationByActivityList = new ObservableCollection<UserActivityModel>();
-            LoadSumDurationByActivitiesCommand = new RelayCommand(LoadSumDurationByActivitiesList);
+
+            //loading all activities
+            LoadSumDurationByActivitiesCommand = new RelayCommand(() => UserSumDurationByActivityList = GetSumDurationByActivities(FilterStartDate, FilterEndDate));
             SumActivityExportToCSVCommand = new RelayCommand(SumActivityExportToCSV);
 
             //user activities
@@ -87,51 +88,39 @@ namespace Timesheet.UI.ViewModels
             UserActivityDurationExportToCSVCommand = new RelayCommand(UserActivityDurationExportToCSV);
 
             //user list combo
-            UserList = UserMgmtViewModel.GetAllUsers();
+            UserList = GetAllUsers();
             SelectedUser = UserList.FirstOrDefault();
         }
 
         private void SumActivityExportToCSV()
         {
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            sb.AppendLine("\"Activity\",\"SumDuration\"");
+            var headerList = new List<string>(){"Activity", "SumDuration"};
 
-            string line;
+            string[][] csvArray = new string[UserSumDurationByActivityList.Count()][];
 
-            foreach (var item in UserSumDurationByActivityList)
+            for (int i = 0; i < UserSumDurationByActivityList.Count(); i++)
             {
-                line = "\"" + item.ActivityName.Replace("\"", "\"\"") + "\"" + "," + "\"" + item.SumDurationReadable.Replace("\"", "\"\"") + "\"";
-                sb.AppendLine(line);
+                csvArray[i] = new string[] { UserSumDurationByActivityList[i].ActivityName,
+                                             UserSumDurationByActivityList[i].SumDurationReadable.ToString() };
             }
 
-            SaveFileAs(sb.ToString());
+            SaveFileAs(Helper.ArrayToCSV(csvArray, headerList));
         }
 
         private void UserActivityDurationExportToCSV()
         {
-            if (SelectedUser != null)
+            var headerList = new List<string>() { "Username", "Activity", "SumDuration" };
+
+            string[][] csvArray = new string[UserActivitiesDurationList.Count()][];
+
+            for (int i = 0; i < UserActivitiesDurationList.Count(); i++)
             {
-                System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                sb.AppendLine("\"Username\",\"Activity\",\"SumDuration\"");
-
-                string line;
-
-                foreach (var item in UserActivitiesDurationList)
-                {
-                    line = "\"" + selectedUser.Username.Replace("\"", "\"\"") + "\"" + "," 
-                           + "\"" + item.ActivityName.Replace("\"", "\"\"") + "\"" + "," 
-                           + "\"" + item.SumDurationReadable.Replace("\"", "\"\"") + "\"";
-                    sb.AppendLine(line);
-                }
-
-                SaveFileAs(sb.ToString());
+                csvArray[i] = new string[] { selectedUser.Username,
+                                             UserActivitiesDurationList[i].ActivityName,
+                                             UserActivitiesDurationList[i].SumDurationReadable.ToString() };
             }
-        }
 
-        //all activity
-        private void LoadSumDurationByActivitiesList()
-        {
-            UserSumDurationByActivityList = GetSumDurationByActivities(FilterStartDate, FilterEndDate);
+            SaveFileAs(Helper.ArrayToCSV(csvArray, headerList));
         }
 
         //Filtered by user
@@ -145,12 +134,12 @@ namespace Timesheet.UI.ViewModels
 
         private ObservableCollection<UserActivityModel> GetSumDurationByActivities(DateTime startDate, DateTime endDate)
         {
-            var userActivityList = UserActivityManager.GetSumDurationByActivities(startDate, endDate)
+            var userActivityList = UserActivityService.GetSumDurationByActivities(startDate, endDate)
                 .Select(userActivity => new UserActivityModel
                 {
-                    ActivityId = userActivity.ActivityId,
-                    ActivityName = userActivity.ActivityName,
-                    SumDuration = userActivity.SumDuration,
+                    ActivityId          = userActivity.ActivityId,
+                    ActivityName        = userActivity.ActivityName,
+                    SumDuration         = userActivity.SumDuration,
                     SumDurationReadable = (userActivity.SumDuration < TimeSpan.MaxValue.TotalSeconds) ? TimeSpan.FromSeconds(userActivity.SumDuration).ToString(@"hh\:mm\:ss") : "Too much",
                 }).ToList();
 
@@ -159,14 +148,14 @@ namespace Timesheet.UI.ViewModels
 
         private ObservableCollection<UserActivityModel> GetUserActivitiesDuration(int userId, DateTime startDate, DateTime endDate)
         {
-            var userActivityList = UserActivityManager.GetUserActivitiesDuration(userId, startDate, endDate)
+            var userActivityList = UserActivityService.GetSumDurationByActivities(startDate, endDate, userId)
                 .Select(userActivity => new UserActivityModel
                 {
-                    ActivityId = userActivity.ActivityId,
-                    ActivityName = userActivity.ActivityName,
-                    UserId = SelectedUser.Id,
-                    Username = SelectedUser.Username,
-                    SumDuration = userActivity.SumDuration,
+                    ActivityId          = userActivity.ActivityId,
+                    ActivityName        = userActivity.ActivityName,
+                    UserId              = SelectedUser.Id,
+                    Username            = SelectedUser.Username,
+                    SumDuration         = userActivity.SumDuration,
                     SumDurationReadable = (userActivity.SumDuration < TimeSpan.MaxValue.TotalSeconds) ? TimeSpan.FromSeconds(userActivity.SumDuration).ToString(@"hh\:mm\:ss") : "Too much",
                 }).ToList();
 

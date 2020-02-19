@@ -5,6 +5,7 @@
              DispatcherUnhandledException="Application_DispatcherUnhandledException"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+
         
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -26,8 +27,14 @@
                 <!-- ViewModel template definitions-->
                 <ResourceDictionary Source="Resources\DataTemplates\ViewModelDataTemplates.xaml"/>
 
+                <!-- Converters-->
+                <ResourceDictionary Source="Resources\Converters\SystemConverters.xaml"/>
+                
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-    
+
+        
+
+
     </Application.Resources>
 </Application>

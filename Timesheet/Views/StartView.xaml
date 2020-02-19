@@ -14,11 +14,14 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Text="Welcome"/>
-
-        <Label Style="{StaticResource CurrentUser}" Grid.Row="2" Content="{Binding CurrentUser.Username}" ContentStringFormat="Current user: {0}"/>
+        <TextBlock Grid.Row="0" Text="Please press the Sign In button"/>
+        
+        <Button Grid.Row="1" HorizontalAlignment="Left" Content="Sign In" Style="{StaticResource GeneralButton}" Command="{Binding SignInCommand}"/>
+        
+        <Label Style="{StaticResource CurrentUser}" Grid.Row="3" Content="{Binding CurrentUser.Username}" ContentStringFormat="Current user: {0}"/>
     </Grid>
 </UserControl>
