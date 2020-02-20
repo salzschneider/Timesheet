@@ -9,6 +9,7 @@ A timesheet application in WPF with C#. It's only a demo software. I've overengi
 - XUnit.Visualstudio
 - Moq v4.13.1
 - Autofac.Extras.Moq v4.3.0
+- Newtonsoft.Json.12.0.3
 
 **Keywords**
 - Repository Pattern

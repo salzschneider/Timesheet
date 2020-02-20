@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.902
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timesheet.UI", "Timesheet\Timesheet.UI.csproj", "{F66F5D9C-4939-472F-BC1E-9D9ECAD96AD9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timesheet.UI", "Timesheet.UI\Timesheet.UI.csproj", "{F66F5D9C-4939-472F-BC1E-9D9ECAD96AD9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timesheet.DAL", "Timesheet.DAL\Timesheet.DAL.csproj", "{FDF7C8DB-D116-48E4-AA30-4C40C02C7BE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timesheet.Test", "Timesheet.Test\Timesheet.Test.csproj", "{4B053CF6-B29C-490F-A8C0-C5FD5D3834EA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timesheet.Tests", "Timesheet.Tests\Timesheet.Tests.csproj", "{4B053CF6-B29C-490F-A8C0-C5FD5D3834EA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timesheet.Core", "Timesheet.Core\Timesheet.Core.csproj", "{EAF20FC4-0BA1-4EC4-BC30-80FCE571A677}"
 EndProject

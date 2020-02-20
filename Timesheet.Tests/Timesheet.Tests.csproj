@@ -48,6 +48,9 @@
     <Reference Include="Moq, Version=4.13.0.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\packages\Moq.4.13.1\lib\net45\Moq.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Primitives, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ComponentModel.Primitives.4.1.0\lib\net45\System.ComponentModel.Primitives.dll</HintPath>
@@ -88,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Unit\Utilities\HelperTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -97,14 +101,26 @@
     <Analyzer Include="..\packages\xunit.analyzers.0.10.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Timesheet.BLL\Timesheet.BLL.csproj">
+      <Project>{d86a6189-427f-4d1c-b9a3-4799dfbc6880}</Project>
+      <Name>Timesheet.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Timesheet.Core\Timesheet.Core.csproj">
+      <Project>{EAF20FC4-0BA1-4EC4-BC30-80FCE571A677}</Project>
+      <Name>Timesheet.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Timesheet.DAL\Timesheet.DAL.csproj">
       <Project>{fdf7c8db-d116-48e4-aa30-4c40c02c7be2}</Project>
       <Name>Timesheet.DAL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Timesheet\Timesheet.UI.csproj">
+    <ProjectReference Include="..\Timesheet.UI\Timesheet.UI.csproj">
       <Project>{f66f5d9c-4939-472f-bc1e-9d9ecad96ad9}</Project>
       <Name>Timesheet.UI</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Integration\" />
+    <Folder Include="Unit\Fixtures\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -121,5 +121,16 @@ namespace Timesheet.UI.Utilities
 
             return sb.ToString();
         }
+
+        /// <summary>
+        /// Compares two specified IEnumerable lists and returns a boolean that indicates their equality. Order of the list elements is irrelevant. 
+        /// </summary>
+        /// <param name="firstList">The first String list to compare</param>
+        /// <param name="secondList">The second String list to compare</param>
+        /// <returns>true if the two list are equal</returns>
+        public static bool ListsEqual(IEnumerable<string> firstList, IEnumerable<string> secondList)
+        {
+            return firstList.Count() == secondList.Count() && !firstList.Except(secondList).Any() ;
+        }
     }
 }
