@@ -79,7 +79,7 @@ namespace Timesheet.UI.ViewModels
             UserSumDurationByActivityList = new ObservableCollection<UserActivityModel>();
 
             //loading all activities
-            LoadSumDurationByActivitiesCommand = new RelayCommand(() => UserSumDurationByActivityList = GetSumDurationByActivities(FilterStartDate, FilterEndDate));
+            LoadSumDurationByActivitiesCommand = new RelayCommand(async () => UserSumDurationByActivityList = await GetSumDurationByActivitiesAsync(FilterStartDate, FilterEndDate));
             SumActivityExportToCSVCommand = new RelayCommand(SumActivityExportToCSV);
 
             //user activities
@@ -124,11 +124,11 @@ namespace Timesheet.UI.ViewModels
         }
 
         //Filtered by user
-        private void LoadUserActivitiesDurationList()
+        private async void LoadUserActivitiesDurationList()
         {
             if(SelectedUser != null)
             {
-                UserActivitiesDurationList = GetUserActivitiesDuration(SelectedUser.Id, FilterStartDate, FilterEndDate);
+                UserActivitiesDurationList = await GetUserActivitiesDurationAsync(SelectedUser.Id, FilterStartDate, FilterEndDate);
             }
         }
 
@@ -136,7 +136,23 @@ namespace Timesheet.UI.ViewModels
         {
             var userActivityList = new ObservableCollection<UserActivityModel>();
 
-            UserActivityService.GetSumDurationByActivities(startDate, endDate).ForEach((item) =>
+            UserActivityService.GetSumDurationByActivities(startDate, endDate).ToList().ForEach((item) =>
+            {
+                var mappedItem = (UserActivityModel)item;
+                mappedItem.SumDurationReadable = Helper.SecondsToHourMinSec(item.SumDuration);
+
+                userActivityList.Add(mappedItem);
+            });
+
+            return userActivityList;
+        }
+
+        private async Task<ObservableCollection<UserActivityModel>> GetSumDurationByActivitiesAsync(DateTime startDate, DateTime endDate)
+        {
+            var userActivityList = new ObservableCollection<UserActivityModel>();
+            var bllList = await UserActivityService.GetSumDurationByActivitiesAsync(startDate, endDate);
+
+            bllList.ToList().ForEach((item) =>
             {
                 var mappedItem = (UserActivityModel)item;
                 mappedItem.SumDurationReadable = Helper.SecondsToHourMinSec(item.SumDuration);
@@ -151,11 +167,29 @@ namespace Timesheet.UI.ViewModels
         {
             var userActivityList = new ObservableCollection<UserActivityModel>();
 
-            UserActivityService.GetSumDurationByActivities(startDate, endDate, userId).ForEach((item) =>
+            UserActivityService.GetSumDurationByActivities(startDate, endDate, userId).ToList().ForEach((item) =>
             {
                 var mappedItem = (UserActivityModel)item;
                 mappedItem.UserId              = SelectedUser.Id;
                 mappedItem.Username            = SelectedUser.Username;
+                mappedItem.SumDurationReadable = Helper.SecondsToHourMinSec(item.SumDuration);
+
+                userActivityList.Add(mappedItem);
+            });
+
+            return userActivityList;
+        }
+
+        private async Task<ObservableCollection<UserActivityModel>> GetUserActivitiesDurationAsync(int userId, DateTime startDate, DateTime endDate)
+        {
+            var userActivityList = new ObservableCollection<UserActivityModel>();
+            var bllList = await UserActivityService.GetSumDurationByActivitiesAsync(startDate, endDate, userId);
+
+            bllList.ToList().ForEach((item) =>
+            {
+                var mappedItem = (UserActivityModel)item;
+                mappedItem.UserId = SelectedUser.Id;
+                mappedItem.Username = SelectedUser.Username;
                 mappedItem.SumDurationReadable = Helper.SecondsToHourMinSec(item.SumDuration);
 
                 userActivityList.Add(mappedItem);

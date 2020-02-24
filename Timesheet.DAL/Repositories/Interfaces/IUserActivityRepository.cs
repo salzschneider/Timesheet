@@ -11,6 +11,10 @@ namespace Timesheet.DAL.Repositories
     {
         IEnumerable<UserActivitiesExtendedDTO> GetExtendedAll();
 
+        Task<IEnumerable<UserActivitiesExtendedDTO>> GetExtendedAllAsync();
+
         IEnumerable<UserActivitiesAggrByActivityDTO> GetSumDurationByActivities(DateTime startDate, DateTime endDate, int userId = 0);
+
+        Task<IEnumerable<UserActivitiesAggrByActivityDTO>> GetSumDurationByActivitiesAsync(DateTime startDate, DateTime endDate, int userId);
     }
 }

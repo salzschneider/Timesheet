@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Timesheet.Core.DTO;
 
 namespace Timesheet.BLL.Services
@@ -8,8 +9,12 @@ namespace Timesheet.BLL.Services
     {
         void Add(UserActivitiesFullDTO userActivitiesFullDTO);
 
-        List<UserActivitiesExtendedDTO> GetExtendedAll();
+        IEnumerable<UserActivitiesExtendedDTO> GetExtendedAll();
 
-        List<UserActivitiesAggrByActivityDTO> GetSumDurationByActivities(DateTime startDate, DateTime endDate, int userId = 0);
+        Task<IEnumerable<UserActivitiesExtendedDTO>> GetExtendedAllAsync();
+
+        IEnumerable<UserActivitiesAggrByActivityDTO> GetSumDurationByActivities(DateTime startDate, DateTime endDate, int userId = 0);
+
+        Task<IEnumerable<UserActivitiesAggrByActivityDTO>> GetSumDurationByActivitiesAsync(DateTime startDate, DateTime endDate, int userId = 0);
     }
 }

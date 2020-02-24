@@ -44,7 +44,7 @@ namespace Timesheet.UI.ViewModels
         {
             ActivityList = GetAllActivities();
             ActivityModelEntity = new ActivityModel();
-            ReloadActivityListCommand = new RelayCommand(() => ActivityList = GetAllActivities());
+            ReloadActivityListCommand = new RelayCommand(async() => ActivityList = await GetAllActivitiesAsync());
             AddActivityItemCommand = new RelayCommand(AddActivityItem);
         }
 

@@ -18,10 +18,6 @@ namespace Timesheet.BLL.Services
             this.timesheetUnitOfWork = timesheetUnitOfWork;
         }
 
-        /// <summary>
-        /// Add new activity
-        /// </summary>
-        /// <param name="activityFullDTO"></param>
         public void Add(ActivitiesFullDTO activityFullDTO)
         {
             timesheetUnitOfWork.Activity.Add(new Activities()
@@ -33,11 +29,8 @@ namespace Timesheet.BLL.Services
             timesheetUnitOfWork.Commit();
         }
 
-        /// <summary>
-        /// Get all activities
-        /// </summary>
-        /// <returns></returns>
-        public List<ActivitiesFullDTO> GetAll()
+        
+        public IEnumerable<ActivitiesFullDTO> GetAll()
         {
             return timesheetUnitOfWork.Activity.GetAll()
             .Select(activity => new ActivitiesFullDTO
@@ -46,7 +39,12 @@ namespace Timesheet.BLL.Services
                 Title       = activity.Title,
                 Description = activity.Description,
 
-            }).ToList();
+            });
+        }
+
+        public async Task<IEnumerable<ActivitiesFullDTO>> GetAllAsync()
+        {
+            return await Task<IEnumerable<ActivitiesFullDTO>>.Run(() => GetAll());
         }
     }
 }

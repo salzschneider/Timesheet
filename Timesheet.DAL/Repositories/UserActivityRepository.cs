@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Timesheet.Core.DTO;
 using Timesheet.DAL.Timesheet;
@@ -45,6 +46,15 @@ namespace Timesheet.DAL.Repositories
         }
 
         /// <summary>
+        /// Get all user activities with additional fields (ActivityName, Username)
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        public async Task<IEnumerable<UserActivitiesExtendedDTO>> GetExtendedAllAsync()
+        {
+            return await Task<IEnumerable<UserActivitiesExtendedDTO>>.Run(() => GetExtendedAll());
+        }
+
+        /// <summary>
         /// Getting activities and the related duration sum. Filtering by user id is optional. 
         /// </summary>
         /// <param name="startDate"></param>
@@ -65,6 +75,18 @@ namespace Timesheet.DAL.Repositories
                      }).OrderBy(c => c.ActivityName);
 
             return activityList.AsEnumerable();
+        }
+
+        /// <summary>
+        /// Getting activities and the related duration sum. Filtering by user id is optional. 
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="userId">Filtering the result by user id. If this argument is 0, the result won't be filtered.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        public async Task<IEnumerable<UserActivitiesAggrByActivityDTO>> GetSumDurationByActivitiesAsync(DateTime startDate, DateTime endDate, int userId)
+        {
+            return await Task<IEnumerable<UserActivitiesAggrByActivityDTO>>.Run(() => GetSumDurationByActivities(startDate, endDate,  userId));
         }
 
     }

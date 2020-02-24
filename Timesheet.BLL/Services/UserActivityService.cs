@@ -40,9 +40,18 @@ namespace Timesheet.BLL.Services
         /// Get all user activity with additional fields - (ActivityName, Username)
         /// </summary>
         /// <returns></returns>
-        public List<UserActivitiesExtendedDTO> GetExtendedAll()
+        public IEnumerable<UserActivitiesExtendedDTO> GetExtendedAll()
         {
-            return timesheetUnitOfWork.UserActivity.GetExtendedAll().ToList();
+            return timesheetUnitOfWork.UserActivity.GetExtendedAll();
+        }
+
+        /// <summary>
+        /// Get all user activity with additional fields - (ActivityName, Username)
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<UserActivitiesExtendedDTO>> GetExtendedAllAsync()
+        {
+            return await timesheetUnitOfWork.UserActivity.GetExtendedAllAsync();
         }
 
 
@@ -53,9 +62,21 @@ namespace Timesheet.BLL.Services
         /// <param name="endDate"></param>
         /// <param name="userId">Filtering the result by user id. If this argument is 0 the result won't be filtered.</param>
         /// <returns></returns>
-        public List<UserActivitiesAggrByActivityDTO> GetSumDurationByActivities(DateTime startDate, DateTime endDate, int userId = 0)
+        public IEnumerable<UserActivitiesAggrByActivityDTO> GetSumDurationByActivities(DateTime startDate, DateTime endDate, int userId = 0)
         {
-            return timesheetUnitOfWork.UserActivity.GetSumDurationByActivities(startDate, endDate, userId).ToList();
+            return timesheetUnitOfWork.UserActivity.GetSumDurationByActivities(startDate, endDate, userId);
+        }
+
+        /// <summary>
+        /// Getting activities and the related duration sum. Filtering by user id is optional. 
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="userId">Filtering the result by user id. If this argument is 0 the result won't be filtered.</param>
+        /// <returns></returns>
+        public async Task<IEnumerable<UserActivitiesAggrByActivityDTO>> GetSumDurationByActivitiesAsync(DateTime startDate, DateTime endDate, int userId = 0)
+        {
+            return await timesheetUnitOfWork.UserActivity.GetSumDurationByActivitiesAsync(startDate, endDate, userId);
         }
     }
 }

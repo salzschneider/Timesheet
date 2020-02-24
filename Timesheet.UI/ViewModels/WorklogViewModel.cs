@@ -71,7 +71,7 @@ namespace Timesheet.UI.ViewModels
             MinutesSelector.AddRange(Enumerable.Range(0, 60).ToList());
             MinutesSelector = MinutesSelector.Distinct().ToList();
 
-            LoadUserActivityListCommand = new RelayCommand(LoadUserActivityList);
+            LoadUserActivityListCommand = new RelayCommand(LoadUserActivityListAsync);
             AddUserActivityItemCommand = new RelayCommand(AddUserActivityItem);
         }
 
@@ -80,11 +80,29 @@ namespace Timesheet.UI.ViewModels
             UserActivityList = GetAllUserActivities();
         }
 
+        private async void LoadUserActivityListAsync()
+        {
+            UserActivityList = await GetAllUserActivitiesAsync();
+        }
+
         private ObservableCollection<UserActivityModel> GetAllUserActivities()
         {
             var userActivityList = new ObservableCollection<UserActivityModel>();
 
-            UserActivityService.GetExtendedAll().ForEach((item) =>
+            UserActivityService.GetExtendedAll().ToList().ForEach((item) =>
+            {
+                userActivityList.Add((UserActivityModel)item);
+            });
+
+            return userActivityList;
+        }
+
+        private async Task<ObservableCollection<UserActivityModel>> GetAllUserActivitiesAsync()
+        {
+            var userActivityList = new ObservableCollection<UserActivityModel>();
+            var bllList = await UserActivityService.GetExtendedAllAsync();
+
+            bllList.ToList().ForEach((item) =>
             {
                 userActivityList.Add((UserActivityModel)item);
             });

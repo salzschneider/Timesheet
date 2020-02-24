@@ -81,9 +81,9 @@ namespace Timesheet.UI.ViewModels
             }
         }
 
-        private void LoadUserList()
+        private async void LoadUserList()
         {
-            UserList = GetAllUsers();
+            UserList = await GetAllUsersAsync();
 
             if(ViewModelBase.CurrentUserProvider != null)
             {

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Timesheet.Core.DTO;
 
 namespace Timesheet.BLL.Services
@@ -7,7 +8,9 @@ namespace Timesheet.BLL.Services
     {
         void Add(UsersFullDTO usersFullDTO);
 
-        List<UsersFullDTO> GetAll();
+        IEnumerable<UsersFullDTO> GetAll();
+
+        Task<IEnumerable<UsersFullDTO>> GetAllAsync();
 
         UsersFullDTO GetById(int id);
     }

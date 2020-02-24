@@ -38,7 +38,7 @@ namespace Timesheet.BLL.Services
         /// Get all users
         /// </summary>
         /// <returns></returns>
-        public List<UsersFullDTO> GetAll()
+        public IEnumerable<UsersFullDTO> GetAll()
         {
             return timesheetUnitOfWork.User.GetAll()
                 .Select(user => new UsersFullDTO
@@ -48,7 +48,16 @@ namespace Timesheet.BLL.Services
                     Password = user.Password,
                     FullName = user.FullName,
 
-                }).ToList();
+                });
+        }
+
+        /// <summary>
+        /// Get all users
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<UsersFullDTO>> GetAllAsync()
+        {
+            return await Task<IEnumerable<UsersFullDTO>>.Run(() => GetAll());
         }
 
         public UsersFullDTO GetById(int id)

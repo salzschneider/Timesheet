@@ -37,9 +37,7 @@ namespace Timesheet.DAL.Repositories
 
         public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
-            var result = await DbContext.Set<TEntity>().ToListAsync();
-
-            return result;
+            return await Task<IEnumerable<TEntity>>.Run(() => GetAll());
         }
 
         /*public IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)

@@ -117,7 +117,20 @@ namespace Timesheet.UI.ViewModels
         {
             var activityList = new ObservableCollection<ActivityModel>();
 
-            ActivityService.GetAll().ForEach((item) =>
+            ActivityService.GetAll().ToList().ForEach((item) =>
+            {
+                activityList.Add((ActivityModel)item);
+            });
+
+            return activityList;
+        }
+
+        public async Task<ObservableCollection<ActivityModel>> GetAllActivitiesAsync()
+        {
+            var activityList = new ObservableCollection<ActivityModel>();
+            var bllList = await ActivityService.GetAllAsync();
+
+            bllList.ToList().ForEach((item) =>
             {
                 activityList.Add((ActivityModel)item);
             });
@@ -129,7 +142,20 @@ namespace Timesheet.UI.ViewModels
         {
             var userList = new ObservableCollection<UserModel>();
 
-            UserService.GetAll().ForEach((item) =>
+            UserService.GetAll().ToList().ForEach((item) =>
+            {
+                userList.Add((UserModel)item);
+            });
+
+            return userList;
+        }
+
+        public async Task<ObservableCollection<UserModel>> GetAllUsersAsync()
+        {
+            var userList = new ObservableCollection<UserModel>();
+            var bllList = await UserService.GetAllAsync();
+
+            bllList.ToList().ForEach((item) =>
             {
                 userList.Add((UserModel)item);
             });
