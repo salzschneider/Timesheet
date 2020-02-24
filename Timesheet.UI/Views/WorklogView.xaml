@@ -36,14 +36,14 @@
           CanUserResizeRows="False" CanUserSortColumns="True" BorderThickness="1" VerticalGridLinesBrush="{StaticResource LightGrey}" HorizontalGridLinesBrush="{StaticResource LightGrey}" >
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Id" Binding="{Binding Id}" />
-                <DataGridTemplateColumn Header="User" >
+                <DataGridTemplateColumn Header="User" SortMemberPath="User" CanUserSort="True">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Username}" TextWrapping="Wrap"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Activity" >
+                <DataGridTemplateColumn Header="Activity" SortMemberPath="Activity" CanUserSort="True">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding ActivityName}" TextWrapping="Wrap"/>
@@ -52,7 +52,7 @@
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Duration" Binding="{Binding DurationReadable}" />
                 <DataGridTextColumn Header="Date" Binding="{Binding Date}" />
-                <DataGridTemplateColumn Header="Comment" Width="*">
+                <DataGridTemplateColumn Header="Comment" SortMemberPath="Comment" CanUserSort="True" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Comment}" TextWrapping="Wrap"/>

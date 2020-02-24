@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Timesheet.Core.DTO;
 using Timesheet.UI.Utilities;
 
 namespace Timesheet.UI.Models
@@ -32,6 +33,19 @@ namespace Timesheet.UI.Models
         {
             get { return password; }
             set { OnPropertyChanged<string>(ref password, value); }
+        }
+
+        public static explicit operator UserModel(UsersFullDTO usersFullDTO)
+        {
+            UserModel userModel = new UserModel()
+            {
+                Id       = usersFullDTO.Id,
+                Username = usersFullDTO.Username,
+                FullName = usersFullDTO.FullName,
+                Password = usersFullDTO.Password,
+            };
+
+            return userModel;
         }
     }
 }

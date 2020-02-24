@@ -65,10 +65,10 @@ namespace Timesheet.UI.ViewModels
             SelectedActivity = ActivityList.FirstOrDefault();
             UserActivityEntity = new UserActivityModel();
 
-            HoursSelector = Enumerable.Range(0, 25).ToList();
+            HoursSelector = Enumerable.Range(0, 24).ToList();
 
             MinutesSelector = new List<int>() { 0, 30 };
-            MinutesSelector.AddRange(Enumerable.Range(0, 61).ToList());
+            MinutesSelector.AddRange(Enumerable.Range(0, 60).ToList());
             MinutesSelector = MinutesSelector.Distinct().ToList();
 
             LoadUserActivityListCommand = new RelayCommand(LoadUserActivityList);
@@ -82,22 +82,14 @@ namespace Timesheet.UI.ViewModels
 
         private ObservableCollection<UserActivityModel> GetAllUserActivities()
         {
-            var userActivityList = UserActivityService.GetExtendedAll()
-                .Select(userActivity => new UserActivityModel
-                {
-                    Id               = userActivity.Id,
-                    UserId           = userActivity.UserId,
-                    Username         = userActivity.Username,
-                    ActivityId       = userActivity.ActivityId,
-                    ActivityName     = userActivity.ActivityName,
-                    Duration         = userActivity.Duration,
-                    DurationReadable = (userActivity.Duration < TimeSpan.MaxValue.TotalSeconds) ? TimeSpan.FromSeconds(userActivity.Duration).ToString(@"hh\:mm\:ss") : "Too much",
-                    Comment          = userActivity.Comment,
-                    Date             = userActivity.Date,
+            var userActivityList = new ObservableCollection<UserActivityModel>();
 
-                });
+            UserActivityService.GetExtendedAll().ForEach((item) =>
+            {
+                userActivityList.Add((UserActivityModel)item);
+            });
 
-            return new ObservableCollection<UserActivityModel>(userActivityList);
+            return userActivityList;
         }
 
         private void AddUserActivityItem()

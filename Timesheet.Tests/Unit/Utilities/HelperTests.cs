@@ -83,7 +83,7 @@ namespace Timesheet.Test.Utilities
             Assert.Equal(expected, actual);
         }
 
-        public static IEnumerable<object[]> GetWrapListInnerDataPassed =>
+        public static IEnumerable<object[]> GetWrapListInlineDataPassed =>
             new List<object[]>()
             {
                 new object[]{new List<string>(){"Hello", "", "O'Connor"}, "\"", new List<string>(){"\"Hello\"","\"\"", "\"O'Connor\"" } },
@@ -91,7 +91,7 @@ namespace Timesheet.Test.Utilities
             };
 
         [Theory]
-        [MemberData(nameof(GetWrapListInnerDataPassed))]
+        [MemberData(nameof(GetWrapListInlineDataPassed))]
         public void WrapListElements_ListWithStringElements_ReturnListWithWrappedElements(IEnumerable<string> list, string wrapString, IEnumerable<string> expected)
         {
             //act
@@ -101,7 +101,7 @@ namespace Timesheet.Test.Utilities
             Assert.True(Helper.ListsEqual(actual, expected));
         }
 
-        public static IEnumerable<object[]> GetListsEqualInnerDataPassed =>
+        public static IEnumerable<object[]> GetListsEqualInlineDataPassed =>
             new List<object[]>()
             {
                 new object[]{ new List<string> { "first", "second", "o'connor" }, new List<string> { "second", "o'connor", "first" }, true },
@@ -109,7 +109,7 @@ namespace Timesheet.Test.Utilities
             };
 
         [Theory]
-        [MemberData(nameof(GetListsEqualInnerDataPassed))]
+        [MemberData(nameof(GetListsEqualInlineDataPassed))]
         public void ListsEqual_StringLists_ReturnIfListsEqual(IEnumerable<string> firstList, IEnumerable<string> secondList, bool expected)
         {
             //act
@@ -119,7 +119,7 @@ namespace Timesheet.Test.Utilities
             Assert.Equal(actual, expected);
         }
 
-        public static IEnumerable<object[]> GetArrayToCSVInnerDataPassed =>
+        public static IEnumerable<object[]> GetArrayToCSVInlineDataPassed =>
             new List<object[]>()
             {
                 new object[]{ new string[][] { new string[] {"Admin", "ddd", "00:10:00" }, new string[] { "Admin", "Meeting", "00:00:00" } },
@@ -130,7 +130,7 @@ namespace Timesheet.Test.Utilities
             };
 
         [Theory]
-        [MemberData(nameof(GetArrayToCSVInnerDataPassed))]
+        [MemberData(nameof(GetArrayToCSVInlineDataPassed))]
         public void ArrayToCSV_ArrayWithoutHeader_ReturnCSVText(string[][] array, string expectd)
         {
             //act
@@ -140,7 +140,7 @@ namespace Timesheet.Test.Utilities
             Assert.Equal(expectd, actual);
         }
 
-        public static IEnumerable<object[]> GetArrayToCSVWithHeaderInnerDataPassed =>
+        public static IEnumerable<object[]> GetArrayToCSVWithHeaderInlineDataPassed =>
             new List<object[]>()
             {
                 new object[]{ new string[][] { new string[] {"Admin", "ddd", "00:10:00" }, new string[] { "Admin", "Meeting", "00:00:00" } },
@@ -153,7 +153,7 @@ namespace Timesheet.Test.Utilities
             };
 
         [Theory]
-        [MemberData(nameof(GetArrayToCSVWithHeaderInnerDataPassed))]
+        [MemberData(nameof(GetArrayToCSVWithHeaderInlineDataPassed))]
         public void ArrayToCSV_ArrayWithHeader_ReturnCSVText(string[][] array, List<string> header, string expectd)
         {
             //act
@@ -176,7 +176,7 @@ namespace Timesheet.Test.Utilities
             public DateTime Date = new DateTime(2008, 3, 1, 7, 0, 0);
         }
 
-        public static IEnumerable<object[]> GetCloneObjectInnerDataPassed =>
+        public static IEnumerable<object[]> GetCloneObjectInlineDataPassed =>
             new List<object[]>()
             {
                 new object[]{ new Person()},
@@ -184,7 +184,7 @@ namespace Timesheet.Test.Utilities
             };
 
         [Theory]
-        [MemberData(nameof(GetCloneObjectInnerDataPassed))]
+        [MemberData(nameof(GetCloneObjectInlineDataPassed))]
         public void CloneObject_AnyObject_ReturnNewObjectWithSamePropertiesAndValues(object inputObject)
         {
             //act
@@ -195,6 +195,22 @@ namespace Timesheet.Test.Utilities
 
             //assert
             Assert.Equal(actualString, expectedString);
+        }
+
+        [Theory]
+        [InlineData(-10, "00:00:00")]
+        [InlineData(0, "00:00:00")]
+        [InlineData(60, "00:01:00")]
+        [InlineData(3671, "01:01:11")]
+        [InlineData(86401, "24:00:01")]
+        [InlineData(396612, "110:10:12")]
+        public void SecondsToHourMinSec_Seconds_ReturnHoursMinutesSecondsFormat(int seconds, string expected)
+        {
+            //act
+            var actual = Helper.SecondsToHourMinSec(seconds);
+
+            //assert
+            Assert.Equal(expected, actual);
         }
 
     }

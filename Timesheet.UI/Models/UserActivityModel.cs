@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Timesheet.Core.DTO;
 using Timesheet.UI.Utilities;
 
 namespace Timesheet.UI.Models
@@ -60,5 +61,36 @@ namespace Timesheet.UI.Models
         }
 
         public System.DateTime? Date { get; set; }
+
+
+        public static explicit operator UserActivityModel(UserActivitiesExtendedDTO userActivity)
+        {
+            UserActivityModel userActivityModel = new UserActivityModel()
+            {
+                Id               = userActivity.Id,
+                UserId           = userActivity.UserId,
+                Username         = userActivity.Username,
+                ActivityId       = userActivity.ActivityId,
+                ActivityName     = userActivity.ActivityName,
+                Duration         = userActivity.Duration,
+                DurationReadable = Helper.SecondsToHourMinSec(userActivity.Duration),
+                Comment          = userActivity.Comment,
+                Date             = userActivity.Date,
+            };
+
+            return userActivityModel;
+        }
+
+        public static explicit operator UserActivityModel(UserActivitiesAggrByActivityDTO userAggrActivity)
+        {
+            UserActivityModel userActivityModel = new UserActivityModel()
+            {
+                ActivityId   = userAggrActivity.ActivityId,
+                ActivityName = userAggrActivity.ActivityName,
+                SumDuration  = userAggrActivity.SumDuration,
+            };
+
+            return userActivityModel;
+        }
     }
 }

@@ -36,14 +36,14 @@
           CanUserResizeRows="False" CanUserSortColumns="True" BorderThickness="1" VerticalGridLinesBrush="{StaticResource LightGrey}" HorizontalGridLinesBrush="{StaticResource LightGrey}" >
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Id" Binding="{Binding Id}" />
-                <DataGridTemplateColumn Header="Title" Width="*">
+                <DataGridTemplateColumn Header="Title" SortMemberPath="Title" CanUserSort="True" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Title}" TextWrapping="Wrap"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Description" Width="2*">
+                <DataGridTemplateColumn Header="Description" SortMemberPath="Description" CanUserSort="True" Width="2*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Description}" TextWrapping="Wrap"/>

@@ -50,9 +50,7 @@ namespace Timesheet.UI.ViewModels
 
         private void AddActivityItem()
         {
-            ActivityService activityService = (ActivityService)ServiceFactory.CreateActivityService();
-
-            activityService.Add(new ActivitiesFullDTO() {
+            ActivityService.Add(new ActivitiesFullDTO() {
                     Title = ActivityModelEntity.Title,
                     Description = ActivityModelEntity.Description,
             });

@@ -132,5 +132,28 @@ namespace Timesheet.UI.Utilities
         {
             return firstList.Count() == secondList.Count() && !firstList.Except(secondList).Any() ;
         }
+
+        /// <summary>
+        /// Converts seconds to (hours*)hours:minutes:seconds format. 
+        /// </summary>
+        /// <param name="seconds"></param>
+        /// <returns>Time in (hh*)hh:mm:ss format or empty string.</returns>
+        public static string SecondsToHourMinSec(int secondInput)
+        {
+            if(secondInput <= 0 )
+            {
+                return "00:00:00";
+            }
+
+            int hours = secondInput / 3600;
+            int remainder = secondInput % 3600;
+
+            int minutes = remainder / 60;
+            remainder = remainder % 60;      
+
+            return string.Format("{0}:{1}:{2}", hours.ToString().PadLeft(2, '0'), 
+                                                minutes.ToString().PadLeft(2,'0'),
+                                                remainder.ToString().PadLeft(2, '0'));
+        }
     }
 }

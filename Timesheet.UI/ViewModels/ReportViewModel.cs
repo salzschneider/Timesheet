@@ -134,32 +134,34 @@ namespace Timesheet.UI.ViewModels
 
         private ObservableCollection<UserActivityModel> GetSumDurationByActivities(DateTime startDate, DateTime endDate)
         {
-            var userActivityList = UserActivityService.GetSumDurationByActivities(startDate, endDate)
-                .Select(userActivity => new UserActivityModel
-                {
-                    ActivityId          = userActivity.ActivityId,
-                    ActivityName        = userActivity.ActivityName,
-                    SumDuration         = userActivity.SumDuration,
-                    SumDurationReadable = (userActivity.SumDuration < TimeSpan.MaxValue.TotalSeconds) ? TimeSpan.FromSeconds(userActivity.SumDuration).ToString(@"hh\:mm\:ss") : "Too much",
-                }).ToList();
+            var userActivityList = new ObservableCollection<UserActivityModel>();
 
-            return new ObservableCollection<UserActivityModel>(userActivityList);
+            UserActivityService.GetSumDurationByActivities(startDate, endDate).ForEach((item) =>
+            {
+                var mappedItem = (UserActivityModel)item;
+                mappedItem.SumDurationReadable = Helper.SecondsToHourMinSec(item.SumDuration);
+
+                userActivityList.Add(mappedItem);
+            });
+
+            return userActivityList;
         }
 
         private ObservableCollection<UserActivityModel> GetUserActivitiesDuration(int userId, DateTime startDate, DateTime endDate)
         {
-            var userActivityList = UserActivityService.GetSumDurationByActivities(startDate, endDate, userId)
-                .Select(userActivity => new UserActivityModel
-                {
-                    ActivityId          = userActivity.ActivityId,
-                    ActivityName        = userActivity.ActivityName,
-                    UserId              = SelectedUser.Id,
-                    Username            = SelectedUser.Username,
-                    SumDuration         = userActivity.SumDuration,
-                    SumDurationReadable = (userActivity.SumDuration < TimeSpan.MaxValue.TotalSeconds) ? TimeSpan.FromSeconds(userActivity.SumDuration).ToString(@"hh\:mm\:ss") : "Too much",
-                }).ToList();
+            var userActivityList = new ObservableCollection<UserActivityModel>();
 
-            return new ObservableCollection<UserActivityModel>(userActivityList);
+            UserActivityService.GetSumDurationByActivities(startDate, endDate, userId).ForEach((item) =>
+            {
+                var mappedItem = (UserActivityModel)item;
+                mappedItem.UserId              = SelectedUser.Id;
+                mappedItem.Username            = SelectedUser.Username;
+                mappedItem.SumDurationReadable = Helper.SecondsToHourMinSec(item.SumDuration);
+
+                userActivityList.Add(mappedItem);
+            });
+
+            return userActivityList;
         }
     }
 }

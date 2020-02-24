@@ -115,31 +115,26 @@ namespace Timesheet.UI.ViewModels
 
         public ObservableCollection<ActivityModel> GetAllActivities()
         {
-            var activityList = ActivityService.GetAll()
-                .Select(activity => new ActivityModel
-                {
-                    Id          = activity.Id,
-                    Title       = activity.Title,
-                    Description = activity.Description,
+            var activityList = new ObservableCollection<ActivityModel>();
 
-                }).ToList();
+            ActivityService.GetAll().ForEach((item) =>
+            {
+                activityList.Add((ActivityModel)item);
+            });
 
-            return new ObservableCollection<ActivityModel>(activityList);
+            return activityList;
         }
 
         public ObservableCollection<UserModel> GetAllUsers()
         {
-            var userList = UserService.GetAll()
-                .Select(user => new UserModel
-                {
-                    Id = user.Id,
-                    Username = user.Username,
-                    FullName = user.FullName,
-                    Password = user.Password,
+            var userList = new ObservableCollection<UserModel>();
 
-                }).ToList();
+            UserService.GetAll().ForEach((item) =>
+            {
+                userList.Add((UserModel)item);
+            });
 
-            return new ObservableCollection<UserModel>(userList);
+            return userList;
         }
     }
 }
