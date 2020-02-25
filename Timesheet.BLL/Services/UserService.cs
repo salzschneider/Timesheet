@@ -57,12 +57,28 @@ namespace Timesheet.BLL.Services
         /// <returns></returns>
         public async Task<IEnumerable<UsersFullDTO>> GetAllAsync()
         {
-            return await Task<IEnumerable<UsersFullDTO>>.Run(() => GetAll());
+            var dllList = await timesheetUnitOfWork.User.GetAllAsync();
+
+            return dllList.Select(user => new UsersFullDTO
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Password = user.Password,
+                FullName = user.FullName,
+
+            });
         }
 
+        /// <summary>
+        /// Get an entry with the given id. If no entry is found, the null is returned.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public UsersFullDTO GetById(int id)
         {
             var user = timesheetUnitOfWork.User.GetById(id);
+
+            if (user is null) throw new NullReferenceException("User object can't be null. Invalid user id was given.");
 
             return new UsersFullDTO()
             {

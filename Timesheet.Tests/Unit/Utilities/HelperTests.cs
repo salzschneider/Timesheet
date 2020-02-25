@@ -32,34 +32,6 @@ namespace Timesheet.Test.Utilities
                 };
 
         [Theory]
-        [MemberData(nameof(GetCreateUserModelInlineDataPassed))]
-        public void CreateUserModel_UsersFullDTO_ReturnsSameUserModel(UsersFullDTO inputDto, UserModel expected)
-        {
-            //act
-            var actual = Helper.CreateUserModel(inputDto);
-
-            var actualString = JsonConvert.SerializeObject(actual);
-            var expectedString = JsonConvert.SerializeObject(expected);
-
-            //assert
-            Assert.Equal(actualString, expectedString);
-        }
-
-        [Theory]
-        [MemberData(nameof(GetCreateUserModelInlineDataFailed))]
-        public void CreateUserModel_UsersFullDTO_ReturnsNotSameUserModel(UsersFullDTO inputDto, UserModel expected)
-        {
-            //act
-            var actual = Helper.CreateUserModel(inputDto);
-
-            var actualString = JsonConvert.SerializeObject(actual);
-            var expectedString = JsonConvert.SerializeObject(expected);
-
-            //assert
-            Assert.NotEqual(actualString, expectedString);
-        }
-
-        [Theory]
         [InlineData("hello", "A", "AhelloA")]
         [InlineData("hello", "\"", "\"hello\"")]
         [InlineData("", "", "")]

@@ -95,7 +95,7 @@ namespace Timesheet.UI.ViewModels
             if (!IsSignedIn)
             {
                 //1. user is the admin now
-                CurrentUser = Helper.CreateUserModel(UserService.GetById(1));
+                CurrentUser = (UserModel)UserService.GetById(1);
                 ViewModelBase.CurrentUserProvider = CurrentUser;
 
                 IsSignedIn = true;

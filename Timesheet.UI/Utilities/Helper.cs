@@ -50,22 +50,6 @@ namespace Timesheet.UI.Utilities
         }
 
         /// <summary>
-        /// Creating a UserModel from a UsersFullDTO 
-        /// </summary>
-        /// <param name="user"></param>
-        /// <returns></returns>
-        public static UserModel CreateUserModel(UsersFullDTO user)
-        {
-            return new UserModel()
-            {
-                Id = user.Id,
-                Username = user.Username,
-                Password = user.Password,
-                FullName = user.FullName,
-            };
-        }
-
-        /// <summary>
         /// Inserting string value at the beginning and in the end of all elements of a string list
         /// </summary>
         /// <param name="list"></param>

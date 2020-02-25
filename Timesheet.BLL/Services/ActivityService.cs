@@ -44,7 +44,15 @@ namespace Timesheet.BLL.Services
 
         public async Task<IEnumerable<ActivitiesFullDTO>> GetAllAsync()
         {
-            return await Task<IEnumerable<ActivitiesFullDTO>>.Run(() => GetAll());
+            var dllList = await timesheetUnitOfWork.Activity.GetAllAsync();
+
+            return dllList.Select(activity => new ActivitiesFullDTO
+            {
+                Id = activity.Id,
+                Title = activity.Title,
+                Description = activity.Description,
+
+            });
         }
     }
 }
