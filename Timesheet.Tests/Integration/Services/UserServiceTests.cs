@@ -24,8 +24,11 @@ namespace Timesheet.Test.Integration.Services
         public UserServiceTests(TimesheetDatabaseFixture dbInputFixture)
         {
             dbFixture = dbInputFixture;
-            baseUsersList = dbFixture.UsersInitData;
-            dbFixture.InitUsersTable(dbFixture.CreateDbContext());
+            baseUsersList = dbFixture.UsersInitData.ToList();
+
+            dbFixture.CleanUserActivitiesTable(dbFixture.CreateDbContext());
+            dbFixture.RebuildUsersTable(dbFixture.CurrentDbContext);
+
             userService = new UserService(new TimesheetUnitOfWork(dbFixture.CurrentDbContext));
         }
 

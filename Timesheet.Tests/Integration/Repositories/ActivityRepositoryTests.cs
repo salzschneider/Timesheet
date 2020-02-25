@@ -24,8 +24,8 @@ namespace Timesheet.Test.Integration.Repositories
         public ActivityRepositoryTests(TimesheetDatabaseFixture dbInputFixture)
         {
             dbFixture = dbInputFixture;
-            baseActivitiesList = dbFixture.ActivitiesInitData;
-            dbFixture.InitActivitiesTable(dbFixture.CreateDbContext());
+            baseActivitiesList = dbFixture.ActivitiesInitData.ToList();
+            dbFixture.RebuildActivitiesTable(dbFixture.CreateDbContext());
             activityRepo = new ActivityRepository(dbFixture.CurrentDbContext);
         }
         
@@ -132,7 +132,7 @@ namespace Timesheet.Test.Integration.Repositories
         public void Add_NewElementToBase_ReturnBaseListPlusNewElement()
         {
             //arrange
-            var expectedList = baseActivitiesList;
+            var expectedList = baseActivitiesList.ToList();
             Activities newElement = new Activities() { Id = 4, Title = "New Title", Description = "New Description"};
             expectedList.Add(newElement);
             
@@ -146,12 +146,12 @@ namespace Timesheet.Test.Integration.Repositories
             //assert
             Assert.True(IsEqualActivtiesLists(actualList, expectedList));
         }
-
+        
         [Fact]
         public void Add_NewElementToBase_NOTEqualLists()
         {
             //arrange
-            var expectedList = baseActivitiesList;
+            var expectedList = baseActivitiesList.ToList();
             Activities newElement = new Activities() { Id = 4, Title = "New Title 2", Description = "New Description 2" };
             Activities badApple = new Activities() { Title = "New Title 3", Description = "New Description 3" };
             expectedList.Add(newElement);

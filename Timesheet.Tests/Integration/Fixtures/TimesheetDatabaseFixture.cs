@@ -9,15 +9,15 @@ using System.Data.Entity;
 
 namespace Timesheet.Test.Integration.Fixtures
 {
-    public class TimesheetDatabaseFixture
+    public class TimesheetDatabaseFixture : IDisposable
     {
         private TimesheetDbContextLocator dbContextLocator;
 
         public TimesheetEntities CurrentDbContext { get => dbContextLocator.Current; }
 
-        public List<Activities> ActivitiesInitData { get; private set; }
+        public List<Activities> ActivitiesInitData { get;  }
 
-        public List<UserActivities> UserAcitvitiesInitData { get; private set; }
+        public List<UserActivities> UserActivitiesInitData { get;  }
 
         public List<Users> UsersInitData { get; private set; }
 
@@ -50,7 +50,7 @@ namespace Timesheet.Test.Integration.Fixtures
                 new Users(){ Id = 3, Username = "Ann12", Password = "Plaintext now 3", FullName = "Annabelle Anderson"},
             };
 
-            UserAcitvitiesInitData = new List<UserActivities>()
+            UserActivitiesInitData = new List<UserActivities>()
             {
                 new UserActivities(){ Id = 1, UserId = 1, ActivityId = 1, Duration = 3650, Comment = "Sprint planning meeting", Date = new DateTime(2020, 2, 25, 9, 30, 00)},
                 new UserActivities(){ Id = 2, UserId = 1, ActivityId = 2, Duration = 13650, Comment = "Working like hell", Date = new DateTime(2020, 2, 26, 9, 30, 00)},
@@ -58,34 +58,46 @@ namespace Timesheet.Test.Integration.Fixtures
             };
         }
 
-        public void InitDatabaseTable(TimesheetEntities dbContext)
+        public void RebuildDatabaseTables()
+        {
+            using (var dbCont = new TimesheetEntities())
+            {
+                //deleting dependecies
+                CleanUserActivitiesTable(dbCont);
+                CleanActivitiesTable(dbCont);
+                CleanUsersTable(dbCont);
+
+                dbCont.Activities.AddRange(ActivitiesInitData);
+                dbCont.Users.AddRange(UsersInitData);
+                dbCont.UserActivities.AddRange(UserActivitiesInitData);
+                dbCont.SaveChanges();
+            }
+        }
+
+        public void RebuildActivitiesTable(TimesheetEntities dbContext)
         {
             //deleting dependecies
-            CleanUserActivitiesTable(dbContext);
             CleanActivitiesTable(dbContext);
-            CleanUsersTable(dbContext);
 
             dbContext.Activities.AddRange(ActivitiesInitData);
-            dbContext.Users.AddRange(UsersInitData);
-            dbContext.UserActivities.AddRange(UserAcitvitiesInitData);
             dbContext.SaveChanges();
         }
 
-        public void InitActivitiesTable(TimesheetEntities dbContext)
-        {
-            //deleting dependecies
-            CleanActivitiesTable(dbContext);
-
-            dbContext.Activities.AddRange(ActivitiesInitData);
-            dbContext.SaveChanges();
-        }
-
-        public void InitUsersTable(TimesheetEntities dbContext)
+        public void RebuildUsersTable(TimesheetEntities dbContext)
         {
             //deleting dependecies
             CleanUsersTable(dbContext);
 
             dbContext.Users.AddRange(UsersInitData);
+            dbContext.SaveChanges();
+        }
+
+        public void RebuildUsersActivitiesTable(TimesheetEntities dbContext)
+        {
+            //deleting dependecies
+            CleanActivitiesTable(dbContext);
+
+            dbContext.UserActivities.AddRange(UserActivitiesInitData);
             dbContext.SaveChanges();
         }
 
@@ -105,6 +117,12 @@ namespace Timesheet.Test.Integration.Fixtures
         {
             db.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Users', RESEED, 0)");
             db.Database.ExecuteSqlCommand("DELETE FROM [Users]");
+        }
+
+        //At the and of the database related tests, tables have to be rebuilt
+        public void Dispose()
+        {
+            RebuildDatabaseTables();
         }
     }
 }
