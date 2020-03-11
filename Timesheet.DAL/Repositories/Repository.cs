@@ -25,7 +25,7 @@ namespace Timesheet.DAL.Repositories
 
         public IEnumerable<TEntity> GetAll()
         {
-            return DbContext.Set<TEntity>().AsEnumerable();
+            return DbContext.Set<TEntity>().AsNoTracking().AsEnumerable();
         }
 
         public async Task<TEntity> GetByIdAsync(int id)
@@ -37,7 +37,7 @@ namespace Timesheet.DAL.Repositories
 
         public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
-            return await Task<IEnumerable<TEntity>>.Run(() => GetAll());
+            return await DbContext.Set<TEntity>().AsNoTracking().ToListAsync();
         }
 
         /*public IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)

@@ -48,8 +48,8 @@ namespace Timesheet.BLL.Services
 
             return dllList.Select(activity => new ActivitiesFullDTO
             {
-                Id = activity.Id,
-                Title = activity.Title,
+                Id          = activity.Id,
+                Title       = activity.Title,
                 Description = activity.Description,
 
             });

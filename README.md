@@ -12,6 +12,7 @@ A timesheet application in WPF with C#. It's only a demo software. I've overengi
 - Newtonsoft.Json.12.0.3
 
 **Keywords**
+- WPF / MVVM
 - Repository Pattern
 - Unit OF Work Pattern
 - Factory Pattern

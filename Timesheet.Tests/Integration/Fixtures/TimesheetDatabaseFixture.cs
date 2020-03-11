@@ -103,20 +103,20 @@ namespace Timesheet.Test.Integration.Fixtures
 
         public void CleanUserActivitiesTable(DbContext db)
         {
-            db.Database.ExecuteSqlCommand("DBCC CHECKIDENT('UserActivities', RESEED, 0)");
             db.Database.ExecuteSqlCommand("DELETE FROM [UserActivities]");
+            db.Database.ExecuteSqlCommand("DBCC CHECKIDENT('UserActivities', RESEED, 0)");
         }
 
         public void CleanActivitiesTable(DbContext db)
         {
-            db.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Activities', RESEED, 0)");
             db.Database.ExecuteSqlCommand("DELETE FROM [Activities]");
+            db.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Activities', RESEED, 0)");
         }
 
         public void CleanUsersTable(DbContext db)
         {
-            db.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Users', RESEED, 0)");
             db.Database.ExecuteSqlCommand("DELETE FROM [Users]");
+            db.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Users', RESEED, 0)");
         }
 
         //At the and of the database related tests, tables have to be rebuilt

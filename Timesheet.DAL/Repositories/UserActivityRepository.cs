@@ -40,7 +40,9 @@ namespace Timesheet.DAL.Repositories
                          Duration     = userActivity.Duration,
                          Comment      = userActivity.Comment,
                          Date         = userActivity.Date,
-                     }).OrderBy(c => c.Id);
+                     })
+                     .AsNoTracking()
+                     .OrderBy(c => c.Id);
 
             return allUserActivityList.AsEnumerable();
         }
@@ -72,7 +74,9 @@ namespace Timesheet.DAL.Repositories
                          ActivityId   = g.Key,
                          ActivityName = TimesheetEntities.Activities.FirstOrDefault(a => a.Id == g.Key).Title,
                          SumDuration  = g.Sum(ua => ua.Duration),
-                     }).OrderBy(c => c.ActivityName);
+                     })
+                     .AsNoTracking()
+                     .OrderBy(c => c.ActivityName);
 
             return activityList.AsEnumerable();
         }
